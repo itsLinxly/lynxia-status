@@ -3,145 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Status</title>
+    <title>Lynxia System Status</title>
     <style>
-        /* --- GRUNDLAGEN & LAYOUT (Wie zuvor) --- */
+        /* --- GRUNDLAGEN & VARIABLES --- */
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-green: #10b981;
-            --accent-yellow: #f59e0b;
+            /* Etwas professionellere, tiefere Blautöne für Lynxia */
+            --bg-color: #0a0f1d; 
+            --card-bg: rgba(20, 30, 46, 0.65);
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            
+            /* Status Farben */
+            --accent-green: #22c55e; /* Helleres, klareres Grün */
+            --accent-yellow: #eab308;
             --accent-red: #ef4444;
-            --glow: rgba(16, 185, 129, 0.5);
+            
+            /* Standard Glow (wird per JS geändert) */
+            --current-glow: var(--accent-green);
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
+            /* Subtilerer, professionellerer Hintergrund */
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(76, 29, 149, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.2) 0%, transparent 40%);
+                radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-x: hidden;
         }
 
+        /* --- HAUPTKARTE (Refined Glassmorphism) --- */
         .status-card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px;
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 35px 40px;
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
             margin: 20px;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeInUp 0.6s ease-out;
         }
 
-        .header { text-align: center; margin-bottom: 40px; }
-        .main-status-icon {
-            font-size: 3rem; margin-bottom: 15px; display: inline-block;
-            filter: drop-shadow(0 0 15px var(--glow));
-            animation: float 3s ease-in-out infinite;
+        /* --- LYNXIA HEADER BEREICH --- */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 25px;
         }
-        h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
-        .last-updated { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
 
-        .services { display: flex; flex-direction: column; gap: 15px; }
+        .logo-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #lynxia-logo {
+            height: 80px; /* Passe die Größe an dein Logo an */
+            width: auto;
+            /* Das Logo leuchtet in der Farbe des aktuellen Gesamtstatus */
+            filter: drop-shadow(0 0 20px var(--current-glow));
+            transition: filter 0.5s ease;
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        .brand-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        h1.main-headline {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            /* Die Überschrift nimmt auch die Statusfarbe an */
+            color: var(--current-glow);
+            text-shadow: 0 0 15px rgba(var(--current-glow), 0.3);
+            transition: color 0.5s ease;
+        }
+
+        /* Meta-Info Zeile mit Refresh Button */
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+
+        #refresh-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        #refresh-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.1); }
+        .spinning { animation: spin 0.8s linear infinite; }
+
+
+        /* --- DIENSTE LISTE (Klarer) --- */
+        .services {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
         
         .service-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px; transition: all 0.3s ease;
-            border: 1px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            /* Hellerer Hintergrund für besseren Kontrast */
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.02);
         }
-        .service-item:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.1); }
-        .service-name { font-weight: 500; font-size: 0.95rem; }
 
-        .status-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .service-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
 
-        /* Status Farben Logik */
-        .text-green { color: var(--accent-green); }
-        .text-yellow { color: var(--accent-yellow); }
-        .text-red { color: var(--accent-red); }
+        .service-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* --- STATUS BADGES (Refined) --- */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.2); /* Dunkler Hintergrund für die Badges */
+        }
+
+        .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;}
+
+        /* Status Farben */
+        .status-operational { color: var(--accent-green); }
+        .status-issue { color: var(--accent-yellow); }
+        .status-down { color: var(--accent-red); }
         
-        .dot.operational { background-color: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); animation: pulse 2s infinite; }
-        .dot.issue { background-color: var(--accent-yellow); box-shadow: 0 0 10px var(--accent-yellow); }
-        .dot.down { background-color: var(--accent-red); box-shadow: 0 0 10px var(--accent-red); }
+        .dot.status-operational { background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        /* Nur operational pulsiert, aber dezenter */
+        .dot.status-operational.pulse { animation: gentlePulse 2s infinite; }
+        
+        .dot.status-issue { background-color: var(--accent-yellow); box-shadow: 0 0 8px var(--accent-yellow); }
+        .dot.status-down { background-color: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
 
-        .footer { text-align: center; margin-top: 30px; font-size: 0.75rem; color: var(--text-muted); opacity: 0.7; }
-        .footer a { color: var(--text-main); text-decoration: none; border-bottom: 1px dotted var(--text-muted); }
 
-        @keyframes pulse { 0% { transform: scale(0.95); opacity: 1; } 70% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(0.95); opacity: 1; } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- FOOTER --- */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- ANIMATIONEN --- */
+        @keyframes gentlePulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            70% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="status-card">
         <div class="header">
-            <div class="main-status-icon">✨</div>
-            <h1 id="global-msg">Lade Status...</h1>
-            <div class="last-updated">Stand: <span id="last-updated-time">--</span></div>
+            <div class="logo-container">
+                <img src="logo.png" alt="Lynxia Logo" id="lynxia-logo">
+            </div>
+            <span class="brand-title">Lynxia System Status</span>
+            <h1 class="main-headline" id="global-headline">Lade Status...</h1>
+            
+            <div class="meta-info">
+                <div>Zuletzt aktualisiert: <span id="last-updated-time">--</span></div>
+                <button id="refresh-btn" onclick="manualRefresh()" aria-label="Aktualisieren" title="Status aktualisieren">
+                    ↻
+                </button>
+            </div>
         </div>
 
         <div class="services" id="service-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 20px;">
+                Verbinde zu Status-Server...
             </div>
+        </div>
 
         <div class="footer">
-            <p>&copy; 2026 Status Page. <br> Powered by GitHub Pages & JSON.</p>
+            <p>© 2026 Lynxia. All Systems Monitored.</p>
         </div>
     </div>
 
     <script>
-        async function loadStatus() {
+        // Hilfsfunktion um die globale Farbe zu setzen
+        function setGlobalTheme(status) {
+            const root = document.documentElement;
+            let newColor = 'var(--accent-green)'; // Default
+
+            if (status === 'issue') newColor = 'var(--accent-yellow)';
+            if (status === 'down') newColor = 'var(--accent-red)';
+
+            // Ändert die CSS Variable für den Glow-Effekt von Logo und Überschrift
+            root.style.setProperty('--current-glow', newColor);
+        }
+
+        async function loadStatus(isManualRefresh = false) {
             const container = document.getElementById('service-list');
-            const globalMsg = document.getElementById('global-msg');
+            const globalHeadline = document.getElementById('global-headline');
             const timeDisplay = document.getElementById('last-updated-time');
+            const refreshBtn = document.getElementById('refresh-btn');
+
+            if(isManualRefresh) {
+                refreshBtn.classList.add('spinning');
+            }
 
             try {
-                // Lade die JSON Datei (mit Timestamp Trick gegen Caching)
+                // Timestamp-Trick gegen Caching
                 const response = await fetch('status.json?t=' + new Date().getTime());
                 if (!response.ok) throw new Error("JSON nicht gefunden");
                 const data = await response.json();
 
                 // 1. Header Updates
-                globalMsg.innerText = data.globalMessage;
+                globalHeadline.innerText = data.globalHeadline;
                 timeDisplay.innerText = data.lastUpdated;
+                
+                // Setze das globale Theme (Logo Farbe etc.) basierend auf der JSON
+                setGlobalTheme(data.globalStatus || 'operational');
 
-                // 2. Liste leeren
+                // 2. Liste leeren & neu bauen
                 container.innerHTML = '';
 
                 // 3. Dienste generieren
                 data.services.forEach(service => {
-                    // Farben und Klassen bestimmen
-                    let colorClass = 'text-green';
-                    let dotClass = 'operational';
+                    // Bestimme Status-Klasse
+                    const statusClass = `status-${service.status}`;
+                    // Nur 'operational' bekommt den Pulse-Effekt
+                    const pulseClass = (service.status === 'operational') ? 'pulse' : '';
 
-                    if (service.status === 'issue') {
-                        colorClass = 'text-yellow';
-                        dotClass = 'issue';
-                    } else if (service.status === 'down') {
-                        colorClass = 'text-red';
-                        dotClass = 'down';
-                    }
-
-                    // HTML Element bauen
                     const html = `
                         <div class="service-item">
                             <span class="service-name">${service.name}</span>
-                            <div class="status-badge ${colorClass}">
-                                <span class="dot ${dotClass}"></span>
+                            <div class="status-badge ${statusClass}">
+                                <span class="dot ${statusClass} ${pulseClass}"></span>
                                 ${service.text}
                             </div>
                         </div>
@@ -151,16 +301,26 @@
 
             } catch (error) {
                 console.error(error);
-                globalMsg.innerText = "Fehler beim Laden";
-                globalMsg.style.color = "var(--accent-red)";
-                container.innerHTML = '<p style="text-align:center; color: #94a3b8;">Konnte status.json nicht laden.</p>';
+                globalHeadline.innerText = "Verbindungsfehler";
+                setGlobalTheme('down');
+                container.innerHTML = '<p style="text-align:center; color: var(--accent-red); padding: 20px;">Konnte status.json nicht laden. Bitte prüfen Sie die Datei.</p>';
+            } finally {
+                // Stoppe das Drehen des Buttons, egal ob Erfolg oder Fehler
+                if(isManualRefresh) {
+                     setTimeout(() => { refreshBtn.classList.remove('spinning'); }, 500);
+                }
             }
+        }
+
+        // Funktion für den Klick auf den Button
+        function manualRefresh() {
+            loadStatus(true);
         }
 
         // Status beim Start laden
         loadStatus();
         
-        // Optional: Alle 60 Sekunden automatisch aktualisieren
+        // Auto-Refresh alle 60 Sekunden
         setInterval(loadStatus, 60000);
     </script>
 </body>
