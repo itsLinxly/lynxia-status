@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Status</title>
     <style>
-        /* --- GRUNDLAGEN & LAYOUT --- */
+        /* --- GRUNDLAGEN & LAYOUT (Wie zuvor) --- */
         :root {
             --bg-color: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.7);
@@ -30,10 +30,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
         }
 
-        /* --- HAUPTCONTAINER (GLASS EFFECT) --- */
         .status-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -48,131 +46,44 @@
             animation: fadeIn 0.8s ease-out;
         }
 
-        /* --- HEADER BEREICH --- */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
+        .header { text-align: center; margin-bottom: 40px; }
         .main-status-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            display: inline-block;
+            font-size: 3rem; margin-bottom: 15px; display: inline-block;
             filter: drop-shadow(0 0 15px var(--glow));
             animation: float 3s ease-in-out infinite;
         }
+        h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+        .last-updated { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
 
-        h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .last-updated {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-
-        /* --- DIENSTE LISTE --- */
-        .services {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
+        .services { display: flex; flex-direction: column; gap: 15px; }
+        
         .service-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px; transition: all 0.3s ease;
             border: 1px solid transparent;
         }
+        .service-item:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.1); }
+        .service-name { font-weight: 500; font-size: 0.95rem; }
 
-        .service-item:hover {
-            background: rgba(255, 255, 255, 0.07);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
+        .status-badge { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-        .service-name {
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        /* --- STATUS INDIKATOREN --- */
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--accent-green);
-            box-shadow: 0 0 10px var(--accent-green);
-        }
-
-        /* Pulsierende Animation für "Online" */
-        .dot.operational {
-            animation: pulse 2s infinite;
-        }
-
-        .dot.issue {
-            background-color: var(--accent-yellow);
-            box-shadow: 0 0 10px var(--accent-yellow);
-        }
-
-        .dot.down {
-            background-color: var(--accent-red);
-            box-shadow: 0 0 10px var(--accent-red);
-        }
-
-        /* Textfarben passend zum Status */
+        /* Status Farben Logik */
         .text-green { color: var(--accent-green); }
         .text-yellow { color: var(--accent-yellow); }
         .text-red { color: var(--accent-red); }
+        
+        .dot.operational { background-color: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); animation: pulse 2s infinite; }
+        .dot.issue { background-color: var(--accent-yellow); box-shadow: 0 0 10px var(--accent-yellow); }
+        .dot.down { background-color: var(--accent-red); box-shadow: 0 0 10px var(--accent-red); }
 
-        /* --- FOOTER --- */
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            opacity: 0.7;
-        }
+        .footer { text-align: center; margin-top: 30px; font-size: 0.75rem; color: var(--text-muted); opacity: 0.7; }
+        .footer a { color: var(--text-main); text-decoration: none; border-bottom: 1px dotted var(--text-muted); }
 
-        .footer a {
-            color: var(--text-main);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--text-muted);
-        }
-
-        /* --- ANIMATIONEN --- */
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 1; } 70% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(0.95); opacity: 1; } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -180,60 +91,77 @@
     <div class="status-card">
         <div class="header">
             <div class="main-status-icon">✨</div>
-            <h1>Alle Systeme operational</h1>
-            <div class="last-updated">Letzte Aktualisierung: <span id="time-display">Lädt...</span></div>
+            <h1 id="global-msg">Lade Status...</h1>
+            <div class="last-updated">Stand: <span id="last-updated-time">--</span></div>
         </div>
 
-        <div class="services">
-            
-            <div class="service-item">
-                <span class="service-name">Webseite & API</span>
-                <div class="status-badge text-green">
-                    <span class="dot operational"></span>
-                    Operational
-                </div>
+        <div class="services" id="service-list">
             </div>
-
-            <div class="service-item">
-                <span class="service-name">Datenbank Cluster</span>
-                <div class="status-badge text-green">
-                    <span class="dot operational"></span>
-                    Operational
-                </div>
-            </div>
-
-            <div class="service-item">
-                <span class="service-name">E-Mail Gateway</span>
-                <div class="status-badge text-yellow">
-                    <span class="dot issue"></span>
-                    Verzögerung
-                </div>
-            </div>
-
-            <div class="service-item">
-                <span class="service-name">Backup Server</span>
-                <div class="status-badge text-red">
-                    <span class="dot down"></span>
-                    Wartung
-                </div>
-            </div>
-
-        </div>
 
         <div class="footer">
-            <p>&copy; 2023 Dein Projekt Name. <br> Hosted on GitHub Pages.</p>
+            <p>&copy; 2026 Status Page. <br> Powered by GitHub Pages & JSON.</p>
         </div>
     </div>
 
     <script>
-        // Kleines Script für die Uhrzeit (Client-Side, da kein PHP)
-        function updateTime() {
-            const now = new Date();
-            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('time-display').innerText = now.toLocaleTimeString('de-DE', options);
+        async function loadStatus() {
+            const container = document.getElementById('service-list');
+            const globalMsg = document.getElementById('global-msg');
+            const timeDisplay = document.getElementById('last-updated-time');
+
+            try {
+                // Lade die JSON Datei (mit Timestamp Trick gegen Caching)
+                const response = await fetch('status.json?t=' + new Date().getTime());
+                if (!response.ok) throw new Error("JSON nicht gefunden");
+                const data = await response.json();
+
+                // 1. Header Updates
+                globalMsg.innerText = data.globalMessage;
+                timeDisplay.innerText = data.lastUpdated;
+
+                // 2. Liste leeren
+                container.innerHTML = '';
+
+                // 3. Dienste generieren
+                data.services.forEach(service => {
+                    // Farben und Klassen bestimmen
+                    let colorClass = 'text-green';
+                    let dotClass = 'operational';
+
+                    if (service.status === 'issue') {
+                        colorClass = 'text-yellow';
+                        dotClass = 'issue';
+                    } else if (service.status === 'down') {
+                        colorClass = 'text-red';
+                        dotClass = 'down';
+                    }
+
+                    // HTML Element bauen
+                    const html = `
+                        <div class="service-item">
+                            <span class="service-name">${service.name}</span>
+                            <div class="status-badge ${colorClass}">
+                                <span class="dot ${dotClass}"></span>
+                                ${service.text}
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+
+            } catch (error) {
+                console.error(error);
+                globalMsg.innerText = "Fehler beim Laden";
+                globalMsg.style.color = "var(--accent-red)";
+                container.innerHTML = '<p style="text-align:center; color: #94a3b8;">Konnte status.json nicht laden.</p>';
+            }
         }
-        setInterval(updateTime, 1000);
-        updateTime();
+
+        // Status beim Start laden
+        loadStatus();
+        
+        // Optional: Alle 60 Sekunden automatisch aktualisieren
+        setInterval(loadStatus, 60000);
     </script>
 </body>
 </html>
