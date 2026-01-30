@@ -1,0 +1,26 @@
+{
+  "lastUpdated": "30.01.2026 - 15:30 Uhr",
+  "globalMessage": "Alle Systeme laufen normal",
+  "services": [
+    {
+      "name": "Webseite & API",
+      "status": "operational",
+      "text": "Operational"
+    },
+    {
+      "name": "Datenbank Cluster",
+      "status": "operational",
+      "text": "Operational"
+    },
+    {
+      "name": "E-Mail Gateway",
+      "status": "issue",
+      "text": "Verzögerung"
+    },
+    {
+      "name": "Backup Server",
+      "status": "down",
+      "text": "Wartung"
+    }
+  ]
+}
