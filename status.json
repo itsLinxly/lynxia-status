@@ -1,26 +1,27 @@
 {
-  "lastUpdated": "30.01.2026 - 15:30 Uhr",
-  "globalMessage": "Alle Systeme laufen normal",
+  "lastUpdated": "30.01.2026 - 15:45 Uhr",
+  "globalHeadline": "Alle Systeme operational",
+  "globalStatus": "operational",
   "services": [
     {
-      "name": "Webseite & API",
+      "name": "Lynxia Core Platform",
       "status": "operational",
       "text": "Operational"
     },
     {
-      "name": "Datenbank Cluster",
+      "name": "API Gateway",
       "status": "operational",
       "text": "Operational"
     },
     {
-      "name": "E-Mail Gateway",
+      "name": "Kundendatenbank",
       "status": "issue",
-      "text": "Verzögerung"
+      "text": "Erhöhte Latenz"
     },
     {
-      "name": "Backup Server",
-      "status": "down",
-      "text": "Wartung"
+      "name": "Storage Cluster",
+      "status": "operational",
+      "text": "Operational"
     }
   ]
 }
