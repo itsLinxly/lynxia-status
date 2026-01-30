@@ -316,7 +316,7 @@
         </header>
 
         <!-- Overall Status Banner -->
-        <div class="status-banner" id="statusBanner">
+        <div class="status-banner" id="statusBanner" role="status" aria-live="polite">
             <div class="status-icon" id="statusIcon">✓</div>
             <div class="status-text" id="statusText">Alle Systeme betriebsbereit</div>
             <div class="status-description" id="statusDescription">Alle Services laufen normal</div>
@@ -333,7 +333,7 @@
                 <div class="stat-label">Tage Online</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">< 100ms</div>
+                <div class="stat-value">&lt; 100ms</div>
                 <div class="stat-label">Antwortzeit</div>
             </div>
         </div>
@@ -412,7 +412,7 @@
                         <div class="service-description">${service.description}</div>
                     </div>
                     <div class="service-status">
-                        <span class="status-indicator ${service.status}"></span>
+                        <span class="status-indicator ${service.status}" role="img" aria-label="${statusTexts[service.status]}"></span>
                         <span>${statusTexts[service.status]}</span>
                     </div>
                 </div>
@@ -463,7 +463,7 @@
 
         // Calculate uptime days
         function calculateUptime() {
-            const startDate = new Date('2026-01-01');
+            const startDate = new Date('2024-01-01');
             const now = new Date();
             const diffTime = Math.abs(now - startDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -477,8 +477,8 @@
             updateLastUpdatedTime();
             calculateUptime();
 
-            // Update time every second
-            setInterval(updateLastUpdatedTime, 1000);
+            // Update time every 30 seconds for better performance
+            setInterval(updateLastUpdatedTime, 30000);
         }
 
         // Run on page load
